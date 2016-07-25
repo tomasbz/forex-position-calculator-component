@@ -1,0 +1,87 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+<dom-module id="forex-position-calculator-component">
+
+    <template>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="accountSize">Account size</label>
+                    <input type="text" class="form-control" id="accountSize" on-keyup="change" placeholder="Account size"/>
+                </div>
+                <div class="form-group">
+                    <label for="riskInPercent">Risk in percent</label>
+                    <input type="text" class="form-control" id="riskInPercent" on-keyup="change" placeholder="Risk in percent">
+                </div>
+                <div class="form-group">
+                    <label for="riskInCurrency">Risk in currency</label>
+                    <input type="text" class="form-control" id="riskInCurrency" on-keyup="change" placeholder="Risk in currency">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="riskInPips">Risk in pips</label>
+                    <input type="text" class="form-control" id="riskInPips" on-keyup="change" placeholder="Risk in pips">
+                </div>
+                <div class="form-group">
+                    <label for="tickValue">Tick value</label>
+                    <input type="text" class="form-control" id="tickValue" on-keyup="change" placeholder="Tick value">
+                </div>
+                <div class="form-group">
+                    <label for="lotSize">Lot size</label>
+                    <input type="text" class="form-control" id="lotSize" placeholder="Lot size" disabled>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</dom-module>
+
+<script src="js/storage.js"></script>
+<script src="js/calculator.js"></script>
+<script>
+    Polymer(
+    {
+        is: "forex-position-calculator-component",
+
+        /**
+         * Load fields data from client local storage
+         */
+        ready: function()
+        {
+            var clientStorage = Storage.load();
+            this.$.accountSize.value = clientStorage.accountSize;
+            this.$.riskInPercent.value = clientStorage.riskInPercent;
+            this.$.riskInCurrency.value = clientStorage.riskInCurrency;
+            this.$.riskInPips.value = clientStorage.riskInPips;
+            this.$.tickValue.value = clientStorage.tickValue;
+            this.$.lotSize.value = clientStorage.lotSize;
+        },
+
+        /**
+         * On input change
+         */
+        change: function()
+        {
+            /**
+             * Recalculate input values
+             */
+            this.$.riskInCurrency.value = Calculator.getRiskInCurrency(this.$.riskInPercent.value, this.$.accountSize.value);
+            this.$.lotSize.value = Calculator.getLotSize(this.$.riskInCurrency.value, this.$.riskInPips.value, this.$.tickValue.value);
+
+            /**
+             * Save input values to client storage onChange
+             */
+            Storage.save({
+                accountSize: this.$.accountSize.value,
+                riskInPercent: this.$.riskInPercent.value,
+                riskInCurrency: this.$.riskInCurrency.value,
+                riskInPips: this.$.riskInPips.value,
+                tickValue: this.$.tickValue.value,
+                lotSize: this.$.lotSize.value
+            });
+        }
+
+    });
+</script>
