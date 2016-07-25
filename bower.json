@@ -1,0 +1,13 @@
+{
+  "name": "forex-position-calculator-component",
+  "authors": [
+    "Tomas Bandzevicius <tomas.bandzevicius@gmail.com>"
+  ],
+  "description": "",
+  "moduleType": [],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "polymer": "^1.6.0",
+    "webcomponentsjs": "^0.7.22"
+  }
+}
